@@ -6,22 +6,22 @@ Compilation:  PASSED (0 errors, 5 warnings)
 API:          PASSED
 
 Findbugs:     FAILED (1 warning)
-Checkstyle:   FAILED (8 warnings)
+Checkstyle:   FAILED (1 warning)
 
-Correctness:  41/43 tests passed
-Memory:       44/53 tests passed
+Correctness:  43/43 tests passed
+Memory:       48/53 tests passed
 Timing:       106/110 tests passed
 
-Aggregate score: 94.78%
+Aggregate score: 98.33%
 [Compilation: 5%, API: 5%, Findbugs: 0%, Checkstyle: 0%, Correctness: 60%, Memory: 10%, Timing: 20%]
 
 ASSESSMENT DETAILS
 
 The following files were submitted:
 ----------------------------------
-3.4K Mar  8 07:08 Deque.java
- 465 Mar  8 07:08 Permutation.java
-2.2K Mar  8 07:08 RandomizedQueue.java
+4.3K Mar  8 15:10 Deque.java
+ 465 Mar  8 15:10 Permutation.java
+2.3K Mar  8 15:10 RandomizedQueue.java
 
 
 ********************************************************************************
@@ -32,22 +32,22 @@ The following files were submitted:
 % javac Deque.java
 *-----------------------------------------------------------
 Deque.java:7: warning: [unchecked] unchecked cast
-    private Item[] cap = (Item[]) new Object[1];
-                                  ^
+    private Item[] headQueue = (Item[]) new Object[1];
+                                        ^
   required: Item[]
   found:    Object[]
   where Item is a type-variable:
     Item extends Object declared in class Deque
-Deque.java:38: warning: [unchecked] unchecked cast
-        Item[] copy = (Item[]) new Object[newSize];
-                               ^
+Deque.java:8: warning: [unchecked] unchecked cast
+    private Item[] lastQueue = (Item[]) new Object[1];
+                                        ^
   required: Item[]
   found:    Object[]
   where Item is a type-variable:
     Item extends Object declared in class Deque
-Deque.java:48: warning: [unchecked] unchecked cast
-        Item[] copy = (Item[]) new Object[newSize];
-                               ^
+Deque.java:84: warning: [unchecked] unchecked cast
+        Item[] newQueue = (Item[]) new Object[newSize];
+                                   ^
   required: Item[]
   found:    Object[]
   where Item is a type-variable:
@@ -63,7 +63,7 @@ RandomizedQueue.java:7: warning: [unchecked] unchecked cast
   found:    Object[]
   where Item is a type-variable:
     Item extends Object declared in class RandomizedQueue
-RandomizedQueue.java:49: warning: [unchecked] unchecked cast
+RandomizedQueue.java:50: warning: [unchecked] unchecked cast
         Item[] copy = (Item[]) new Object[size];
                                ^
   required: Item[]
@@ -97,7 +97,7 @@ Permutation:
 
 % findbugs *.class
 *-----------------------------------------------------------
-M D RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT RV: Calls the method 'size()' but ignores its return value. The method, however, does not produce any effect other than returning a value.  At Deque.java:[line 107]
+M D RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT RV: Calls the method 'size()' but ignores its return value. The method, however, does not produce any effect other than returning a value.  At Deque.java:[line 149]
 Warnings generated: 1
 
 ================================================================
@@ -105,15 +105,8 @@ Warnings generated: 1
 
 % checkstyle *.java
 *-----------------------------------------------------------
-Deque.java:4:8: Unused import statement for 'edu.princeton.cs.algs4.StdOut'. [UnusedImports]
-Deque.java:72:11: 'if' is not followed by whitespace. [WhitespaceAfter]
-Deque.java:72:44: Inner assignments should be avoided. [InnerAssignment]
-Deque.java:83:11: 'if' is not followed by whitespace. [WhitespaceAfter]
-Deque.java:83:44: Inner assignments should be avoided. [InnerAssignment]
-Deque.java:92:21: The instance variable '_first' must start with a lowercase letter and use camelCase. [MemberName]
-Deque.java:93:21: The instance variable '_last' must start with a lowercase letter and use camelCase. [MemberName]
 RandomizedQueue.java:6:17: The instance variable 'N' must start with a lowercase letter and use camelCase. [MemberName]
-Checkstyle ends with 8 errors.
+Checkstyle ends with 1 error.
 
 ================================================================
 
@@ -195,10 +188,8 @@ Test 6: Calls to addFirst(), addLast(), removeFirst(),
 
 Test 7: Removing from an empty deque
   * removeFirst()
-     java.util.NoSuchElementException not thrown
   * removeLast()
-     java.util.NoSuchElementException not thrown
-==> FAILED
+==> passed
 
 Test 8: Create multiple deque objects at the same time
 ==> passed
@@ -234,7 +225,7 @@ Test 16: Check iterator() when Deque is empty
 ==> passed
 
 
-Total: 15/16 tests passed!
+Total: 16/16 tests passed!
 
 
 ================================================================
@@ -288,10 +279,8 @@ Test 4: check random calls to enqueue(), dequeue(), sample(), isEmpty(), and siz
 
 Test 5: call dequeue() and sample() from an empty randomized queue
   * dequeue()
-     java.util.NoSuchElementException not thrown
   * sample()
-     java.util.NoSuchElementException not thrown
-==> FAILED
+==> passed
 
 Test 6: create multiple randomized queue objects at the same time
 ==> passed
@@ -354,7 +343,7 @@ Test 18: check iterator() when RandomizedQueue is empty
 ==> passed
 
 
-Total: 17/18 tests passed!
+Total: 18/18 tests passed!
 
 
 ================================================================
@@ -371,35 +360,35 @@ Running 9 total tests.
 
 Test 1a: check formatting for sample inputs from assignment specification
   % java Permutation 3 < distinct.txt
-  G
-  E
+  D
   I
+  F
 
   % java Permutation 3 < distinct.txt
-  D
-  E
-  G
+  H
+  B
+  A
 
   % java Permutation 8 < duplicates.txt
+  CC
+  BB
+  BB
+  BB
+  CC
+  BB
   BB
   AA
-  CC
-  BB
-  BB
-  CC
-  BB
-  BB
 
 ==> passed
 
 Test 1b: check formatting for other inputs
   % java Permutation 8 < mediumTale.txt
+  times
   it
-  it
-  age
-  worst
+  of
   was
-  it
+  was
+  the
   of
   best
 
@@ -533,14 +522,14 @@ Test 1a-1e: Total memory usage after inserting n items,
 
                  n        bytes
 ----------------------------------------------------------
-=> passed        8          120
-=> passed       64          568
-=> passed      256         2104
-=> passed     1024         8248
-=> passed     4096        32824
+=> passed        8          168
+=> passed       64          616
+=> passed      256         2152
+=> passed     1024         8296
+=> passed     4096        32872
 ==> 5/5 tests passed
 
-Memory: 8.00 n + 56.00   (R^2 = 1.000)
+Memory: 8.00 n + 104.00   (R^2 = 1.000)
 
 
 
@@ -549,14 +538,14 @@ Test 2a-2e: Total memory usage after inserting n+1 items,
 
                  n        bytes
 ----------------------------------------------------------
-=> passed        8          184
-=> passed       64         1080
-=> passed      256         4152
-=> passed     1024        16440
-=> passed     4096        65592
+=> passed        8          232
+=> passed       64         1128
+=> passed      256         4200
+=> passed     1024        16488
+=> passed     4096        65640
 ==> 5/5 tests passed
 
-Memory after adding n = 2^i + 1 items: 16.00 n + 40.00   (R^2 = 1.000)
+Memory after adding n = 2^i + 1 items: 16.00 n + 88.00   (R^2 = 1.000)
 
 
 
@@ -565,14 +554,14 @@ Test 3a-3e: Total memory usage after inserting 2n+1 items
 
                  n        bytes
 ----------------------------------------------------------
-=> passed        8          312
-=> passed       64         2104
-=> passed      256         8248
-=> passed     1024        32824
-=> passed     4096       131128
+=> passed        8          360
+=> passed       64         2152
+=> passed      256         8296
+=> passed     1024        32872
+=> passed     4096       131176
 ==> 5/5 tests passed
 
-Memory: 32.00 n + 24.00   (R^2 = 1.000)
+Memory: 32.00 n + 72.00   (R^2 = 1.000)
 
 
 
@@ -582,14 +571,14 @@ Test 4a-4e: Total memory usage after inserting n items and then
 
                  n        bytes
 ----------------------------------------------------------
-=> passed        8           96
-=> FAILED       64          320   (1.3x)
-=> FAILED      256         1088   (4.5x)
-=> FAILED     1024         4160  (17.3x)
-=> FAILED     4096        16448  (68.5x)
-==> 1/5 tests passed
+=> passed        8          136
+=> passed       64          136
+=> passed      256          136
+=> passed     1024          136
+=> passed     4096          136
+==> 5/5 tests passed
 
-Memory after adding n = 2^i items: 6018.91   (R^2 = 0.000)
+Memory after adding n = 2^i items: 136.00   (R^2 = 1.000)
 
 
 
@@ -598,14 +587,14 @@ Test 5a-5e: Total memory usage of iterator after inserting n items.
 
                  n        bytes
 ----------------------------------------------------------
-=> passed        8           32
-=> passed       64           32
-=> passed      256           32
-=> passed     1024           32
-=> passed     4096           32
+=> passed        8           40
+=> passed       64           40
+=> passed      256           40
+=> passed     1024           40
+=> passed     4096           40
 ==> 5/5 tests passed
 
-Memory of iterator after adding n = 2^i items: 32.00   (R^2 = 1.000)
+Memory of iterator after adding n = 2^i items: 40.00   (R^2 = 1.000)
 
 
 
@@ -614,20 +603,20 @@ Test 6a: Insert n strings; delete them one at a time, checking for
          and addLast() are (p1, p2), respectively. The probabilities of
          removeFirst() and removeLast() are (q1, q2), respectively
   * 100 random insertions (1.0, 0.0) and 100 random deletions (1.0, 0.0)
-    - loitering observed during 94 of 100 deletions
-    - maximum number of loitered objects at one time = 67
+    - loitering observed during 100 of 100 deletions
+    - maximum number of loitered objects at one time = 68
   * 100 random insertions (1.0, 0.0) and 100 random deletions (0.0, 1.0)
-    - loitering observed during 99 of 100 deletions
-    - maximum number of loitered objects at one time = 74
-  * 100 random insertions (0.0, 1.0) and 100 random deletions (1.0, 0.0)
-    - loitering observed during 99 of 100 deletions
-    - maximum number of loitered objects at one time = 74
-  * 100 random insertions (0.0, 1.0) and 100 random deletions (0.0, 1.0)
-    - loitering observed during 96 of 100 deletions
-    - maximum number of loitered objects at one time = 67
-  * 100 random insertions (0.5, 0.5) and 100 random deletions (0.5, 0.5)
     - loitering observed during 100 of 100 deletions
     - maximum number of loitered objects at one time = 100
+  * 100 random insertions (0.0, 1.0) and 100 random deletions (1.0, 0.0)
+    - loitering observed during 100 of 100 deletions
+    - maximum number of loitered objects at one time = 100
+  * 100 random insertions (0.0, 1.0) and 100 random deletions (0.0, 1.0)
+    - loitering observed during 100 of 100 deletions
+    - maximum number of loitered objects at one time = 68
+  * 100 random insertions (0.5, 0.5) and 100 random deletions (0.5, 0.5)
+    - loitering observed during 100 of 100 deletions
+    - maximum number of loitered objects at one time = 61
 ==> FAILED
 
 Test 6b: Perform random operations, checking for loitering after
@@ -635,95 +624,97 @@ Test 6b: Perform random operations, checking for loitering after
          removeFirst(), and removeLast() are (p1, p2, p3, p4),
          respectively.
   * 100 random operations (0.8, 0.0, 0.2, 0.0)
-    - loitering detected after operation 7 of 100
-    - sequence of operations:
-         deque.addFirst("IMNBOMVOLN")
-         deque.addFirst("FRSLXAFSOC")
-         deque.addFirst("BUTHFNRVQB")
-         deque.addFirst("CCULTRYHQO")
-         deque.addFirst("FEFYEVEYDM")
-         deque.addFirst("AKTNNSATVT")
-         deque.removeFirst()     ==> AKTNNSATVT
-    - loitered object(s):
-      AKTNNSATVT
-
-  * 100 random operations (0.8, 0.0, 0.0, 0.2)
-    - loitering detected after operation 8 of 100
-    - sequence of operations:
-         deque.addFirst("RTDXEIXSEV")
-         deque.removeLast()      ==> RTDXEIXSEV
-         deque.addFirst("ALTKLSJVBR")
-         deque.addFirst("NUEFXVYHAI")
-         deque.addFirst("TXIMAJMUKC")
-         deque.addFirst("FVADNSYQIV")
-         deque.addFirst("LDOLQXWLSL")
-         deque.removeLast()      ==> ALTKLSJVBR
-    - loitered object(s):
-      ALTKLSJVBR
-
-  * 100 random operations (0.0, 0.8, 0.2, 0.0)
-    - loitering detected after operation 7 of 100
-    - sequence of operations:
-         deque.addLast("UNYYTOFUPY")
-         deque.addLast("XGBEYASYGI")
-         deque.addLast("WTZJTYMMJG")
-         deque.addLast("EJDSYNFXHP")
-         deque.addLast("OYCIXHPVEI")
-         deque.addLast("THHLBCLAYW")
-         deque.removeFirst()     ==> UNYYTOFUPY
-    - loitered object(s):
-      UNYYTOFUPY
-
-  * 100 random operations (0.0, 0.8, 0.0, 0.2)
-    - loitering detected after operation 18 of 100
-  * 100 random operations (0.4, 0.4, 0.1, 0.1)
-    - loitering detected after operation 6 of 100
-    - sequence of operations:
-         deque.addFirst("MQOFKWBKAC")
-         deque.addLast("IIENPSKUGZ")
-         deque.addLast("WTIFKFAIYG")
-         deque.addFirst("NCJELSPPTP")
-         deque.addLast("JQHCTAWLPE")
-         deque.removeLast()      ==> JQHCTAWLPE
-    - loitered object(s):
-      JQHCTAWLPE
-
-  * 100 random operations (0.2, 0.2, 0.3, 0.3)
     - loitering detected after operation 5 of 100
     - sequence of operations:
-         deque.addFirst("KWSBZEXDQY")
-         deque.removeLast()      ==> KWSBZEXDQY
-         deque.addFirst("AJNLNQQFIV")
-         deque.addFirst("YUXVANWGIU")
-         deque.removeFirst()     ==> YUXVANWGIU
+         deque.addFirst("LOPVGUGGXH")
+         deque.addFirst("XWNDMNREBF")
+         deque.addFirst("IESUSYRLWE")
+         deque.addFirst("LWLRTQIDDE")
+         deque.removeFirst()     ==> LWLRTQIDDE
     - loitered object(s):
-      YUXVANWGIU
+      LWLRTQIDDE
+
+  * 100 random operations (0.8, 0.0, 0.0, 0.2)
+    - loitering detected after operation 5 of 100
+    - sequence of operations:
+         deque.addFirst("FTQSENYHOX")
+         deque.addFirst("FHGEEMWRUC")
+         deque.addFirst("QPLFSBHIUW")
+         deque.addFirst("PTFESWDHCE")
+         deque.removeLast()      ==> FTQSENYHOX
+    - loitered object(s):
+      FTQSENYHOX
+
+  * 100 random operations (0.0, 0.8, 0.2, 0.0)
+    - loitering detected after operation 5 of 100
+    - sequence of operations:
+         deque.addLast("YUMYMYKABS")
+         deque.addLast("WQTFYRVCBG")
+         deque.addLast("NEZXATTFUL")
+         deque.addLast("SPOPKWNWUI")
+         deque.removeFirst()     ==> YUMYMYKABS
+    - loitered object(s):
+      YUMYMYKABS
+
+  * 100 random operations (0.0, 0.8, 0.0, 0.2)
+    - loitering detected after operation 9 of 100
+    - sequence of operations:
+         deque.addLast("ANYMBPWZBE")
+         deque.addLast("HNUJJZRSHG")
+         deque.addLast("ECNUZYEOHF")
+         deque.addLast("VMQXFGIXXL")
+         deque.addLast("IXMESXHINS")
+         deque.addLast("DCVSVOFEHP")
+         deque.addLast("QRNTAKQCDF")
+         deque.addLast("MXOANRDTIG")
+         deque.removeLast()      ==> MXOANRDTIG
+    - loitered object(s):
+      MXOANRDTIG
+
+  * 100 random operations (0.4, 0.4, 0.1, 0.1)
+    - loitering detected after operation 5 of 100
+    - sequence of operations:
+         deque.addLast("JMCMVSVKSF")
+         deque.addLast("EVJSTNBEZV")
+         deque.addLast("COWDYKIHHO")
+         deque.addFirst("KMHFVZIZRI")
+         deque.removeLast()      ==> COWDYKIHHO
+    - loitered object(s):
+      COWDYKIHHO
+
+  * 100 random operations (0.2, 0.2, 0.3, 0.3)
+    - loitering detected after operation 2 of 100
+    - sequence of operations:
+         deque.addLast("IHVREDLGMQ")
+         deque.removeLast()      ==> IHVREDLGMQ
+    - loitered object(s):
+      IHVREDLGMQ
 
 ==> FAILED
 
 Test 7: Worst-case constant memory allocated or deallocated
         per deque operation?
   * 128 random operations
-    - failed on trial 27 of 128
-    - when current size of Deque was 20 objects;
-    - the call to addLast()
-    - caused a change in memory of 160 bytes
+    - failed on trial 28 of 128
+    - when current size of Deque was 22 objects;
+    - the call to addFirst()
+    - caused a change in memory of 128 bytes
     - any change of more than 96 bytes fails the test
   * 256 random operations
-    - failed on trial 33 of 256
-    - when current size of Deque was 20 objects;
-    - the call to addFirst()
-    - caused a change in memory of 160 bytes
+    - failed on trial 41 of 256
+    - when current size of Deque was 27 objects;
+    - the call to addLast()
+    - caused a change in memory of 128 bytes
     - any change of more than 96 bytes fails the test
   * 512 random operations
-    - failed on trial 51 of 512
-    - when current size of Deque was 22 objects;
+    - failed on trial 79 of 512
+    - when current size of Deque was 34 objects;
     - the call to addLast()
-    - caused a change in memory of 176 bytes
+    - caused a change in memory of 128 bytes
     - any change of more than 96 bytes fails the test
 ==> FAILED
 
-Total: 21/28 tests passed!
+Total: 25/28 tests passed!
 
 ================================================================
 
@@ -815,7 +806,7 @@ Memory: 4.00 n + 64.00   (R^2 = 1.000)
 
 Test 6a: Insert 100 strings; delete them one at a time, checking
          for loitering after each deletion.
-    - loitering observed during 6 of 100 deletions
+    - loitering observed during 2 of 100 deletions
     - maximum number of loitered objects at one time = 1
 ==> FAILED
 
@@ -823,30 +814,26 @@ Test 6b: Perform random operations, checking for loitering after
          each operation. The probabilities of enqueue(), dequeue(),
          and sample() are (p1, p2, p3), respectively.
   * 200 random operations (0.8, 0.2, 0.0)
-    - loitering detected after operation 148 of 200
+    - loitering detected after operation 190 of 200
   * 200 random operations (0.2, 0.8, 0.0)
-    - loitering detected after operation 2 of 200
+    - loitering detected after operation 3 of 200
     - sequence of operations:
-         rq.enqueue("WSYZIRIBKZ")
-         rq.dequeue()     ==> "WSYZIRIBKZ"
+         rq.enqueue("ROJWFFUMQD")
+         rq.enqueue("HJDCQRZYIK")
+         rq.dequeue()     ==> "HJDCQRZYIK"
     - loitered object(s):
-      WSYZIRIBKZ
+      HJDCQRZYIK
 
   * 200 random operations (0.6, 0.2, 0.2)
-    - loitering detected after operation 2 of 200
-    - sequence of operations:
-         rq.enqueue("NCLKTDRWMD")
-         rq.dequeue()     ==> "NCLKTDRWMD"
-    - loitered object(s):
-      NCLKTDRWMD
-
+    - loitering detected after operation 23 of 200
   * 200 random operations (0.2, 0.4, 0.4)
-    - loitering detected after operation 2 of 200
+    - loitering detected after operation 3 of 200
     - sequence of operations:
-         rq.enqueue("HEBZCKFEOA")
-         rq.dequeue()     ==> "HEBZCKFEOA"
+         rq.enqueue("AKFEUARAOI")
+         rq.sample()      ==> "AKFEUARAOI"
+         rq.dequeue()     ==> "AKFEUARAOI"
     - loitered object(s):
-      HEBZCKFEOA
+      AKFEUARAOI
 
 ==> FAILED
 
@@ -906,7 +893,36 @@ Test 2a-2g:  n random calls to addFirst(), removeFirst(), isEmpty(), and size(),
 => passed       65536     0.00
 => passed      128000     0.01
 => passed      256000     0.01
-=> passed      512
+=> passed      512000     0.03
+=> passed     1024000     0.05
+=> passed     2048000     0.07
+==> 12/12 tests passed
+
+
+Test 3a-3g:  n random calls to addFirst(), addLast(), removeFirst(), removeLast(),
+             isEmpty(), and size() with probabilities (0.3, 0.3, 0.1, 0.1, 0.1, 0.1)
+
+                    n  seconds
+------------------------------
+=> passed        1024     0.00
+=> passed        2048     0.00
+=> passed        4096     0.00
+=> passed        8192     0.00
+=> passed       16384     0.00
+=> passed       32768     0.00
+=> passed       65536     0.00
+=> passed      128000     0.01
+=> passed      256000     0.01
+=> passed      512000     0.02
+=> passed     1024000     0.04
+=> passed     2048000     0.08
+==> 12/12 tests passed
+
+
+Test 4a-4g:  Create deque of n objects, then iterate over the n objects
+             by calling next() and hasNext().
+
+                    n
 
 ...
 

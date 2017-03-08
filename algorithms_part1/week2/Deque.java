@@ -4,9 +4,12 @@ import java.util.Iterator;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Deque<Item> implements Iterable<Item> {
-    private Item[] cap = (Item[]) new Object[1];
-    private int index = 0;
-    private int size = 0;
+    private Item[] headQueue = (Item[]) new Object[1];
+    private Item[] lastQueue = (Item[]) new Object[1];
+    private int hSize = 0;
+    private int lSize = 0;
+    private int hIndex = 0;
+    private int lIndex = 0;
 
     public Deque() {
 
@@ -14,97 +17,139 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return size == 0;
+        return (hSize + lSize) == 0;
     }
 
     // return the number of items on the deque
     public int size() {
-        return size;
+        return hSize + lSize;
     }
 
     // add the item to the front
     public void addFirst(Item item) {
         if (item == null) throw new java.lang.NullPointerException("");
-        if (size == cap.length) {
-            resize(size * 2);
+        if (hSize + hIndex == headQueue.length) {
+            resize(true, hSize == 0 ? 1 : hSize * 2);
         }
-        cap[index] = item;
+        headQueue[hSize + hIndex] = item;
+        hSize++;
     }
 
 
     public void addLast(Item item)           // add the item to the end
     {
         if (item == null) throw new java.lang.NullPointerException("");
-        if (first == last) first--;
-        if (last == cap.length) {
-            resizeAfter(cap.length + size());
+        if (lSize + lIndex == lastQueue.length) {
+            resize(false, lSize == 0 ? 1 : lSize * 2);
         }
-        cap[last++] = item;
+        lastQueue[lSize + lIndex] = item;
+        lSize++;
     }
 
     public Item removeFirst() {
         if (isEmpty()) throw new java.util.NoSuchElementException("");
-        Item item = cap[++first];
-        if (last == size() * 4) {
-            resizeBefore(cap.length - size());
-        } else if (cap.length - last == size() * 3) {
-            resizeAfter(cap.length - size());
+        if (hSize == 0) {
+            return dequeue(false);
         }
-        if (first == last - 1) last = first = 0;
+        if (hSize > 0 && hSize == headQueue.length / 4) {
+            resize(true, 2 * hSize);
+        }
+        hSize--;
+        Item item = headQueue[hSize + hIndex];
         return item;
     }              // remove and return the item from the front
 
     public Item removeLast() {
         if (isEmpty()) throw new java.util.NoSuchElementException("");
-        Item item = cap[--last];
-        if (last == size() * 4) {
-            resizeBefore(cap.length - size());
-        } else if (cap.length - last == size() * 3) {
-            resizeAfter(cap.length - size());
+        if (lSize == 0) {
+            return dequeue(true);
         }
-        if (first == last - 1) last = first = 0;
+        if (lSize > 0 && lSize == lastQueue.length / 4) {
+            resize(false, lSize * 2);
+        }
+        lSize--;
+        Item item = lastQueue[lSize + lIndex];
         return item;
     }             // remove and return the item from the end
+
+    private void resize(boolean isHead, int newSize) {
+        Item[] queue = headQueue;
+        int index = hIndex;
+        int size = hSize;
+        if (!isHead) {
+            queue = lastQueue;
+            index = lIndex;
+            size = lSize;
+        }
+        Item[] newQueue = (Item[]) new Object[newSize];
+        for (int i = 0; i < size; i++) {
+            newQueue[i] = queue[index + i];
+        }
+        if (isHead) {
+            headQueue = newQueue;
+            hIndex = 0;
+        } else {
+            lastQueue = newQueue;
+            lIndex = 0;
+        }
+    }
+
+    private Item dequeue(boolean isHead) {
+        Item[] queue = headQueue;
+        int index = hIndex;
+        int size = hSize;
+        if (!isHead) {
+            queue = lastQueue;
+            index = lIndex;
+            size = lSize;
+        }
+        Item item = queue[index++];
+        size--;
+        if (isHead) {
+            hSize = size;
+            hIndex = index;
+        } else {
+            lSize = size;
+            lIndex = index;
+        }
+        return item;
+    }
 
     public Iterator<Item> iterator() {
         return new ReverseArrayIterator();
     }      // return an iterator over items in order from front to end
 
     private class ReverseArrayIterator implements Iterator<Item> {
-        private int _first = first;
-        private int _last = last;
+        private int first = hIndex + hSize - 1;
+        private int last = lIndex + lSize - 1;
+        private int headIndex = first;
+        private int lastIndex = lIndex;
 
         public boolean hasNext() {
-            return _last > _first + 1;
+            return headIndex >= hIndex || lastIndex <= last;
         }
 
         public Item next() {
-            if (_first + 1 == _last) throw new java.util.NoSuchElementException("");
-            return cap[++_first];
+            if (!hasNext()) throw new java.util.NoSuchElementException("");
+            if (headIndex >= hIndex) {
+                Item item = headQueue[headIndex--];
+                return item;
+            } else {
+                Item item = lastQueue[lastIndex++];
+                return item;
+            }
         }
     }
 
     public static void main(String[] args) {
         Deque<Integer> deque = new Deque<Integer>();
+        deque.addFirst(0);
+        deque.removeLast();
+        deque.addFirst(2);
         deque.size();
-        deque.size();
-        deque.addLast(2);
-        deque.addFirst(3);
-        deque.addFirst(4);
-        deque.addLast(5);
-
-        deque.addFirst(6);
-
-        deque.addFirst(7);
-
-        deque.addFirst(8);
-
-        deque.addLast(9);
-
-        deque.addFirst(10);
-
-        deque.size();
-
+        for (int i : deque) {
+            StdOut.printf("%d ", i);
+        }
     }
 }
 
