@@ -47,3 +47,7 @@ fun append_list(xs, ys:my_int_list) =
   case xs of
       Empty => ys
     | Cons(x, xs') => Cons(x, append_list(xs', ys)) 
+
+
+val a = 1;
+val a = 2;
