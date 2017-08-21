@@ -84,7 +84,7 @@ fun remove_card(card_list, card, ex) =
       fun helper(l, ans) =
 	case l of
 	    [] => raise ex
-	  | [x] => if x = card then ans else ans@[x]
+	  | [x] => if x = card then ans else raise ex
 	  | x::xs' => if x = card then xs' else helper(xs', ans@[x])
 						      
   in
@@ -117,7 +117,47 @@ fun score(card_list, goal) =
   in
       if all_same_color card_list then score div 2 else score
   end
-      
-      
 
+fun officiate(card_list, move_list, goal) =
+  let
+      fun held(card_list, move_list, held_list) =
+	if sum_cards(held_list) >= goal then score(held_list, goal) else
+	case (card_list, move_list) of
+	    ([],_) => score(held_list, goal)
+	  | (_, []) =>   score(held_list, goal)
+	  | (_, Discard card::rest) => held(card_list, rest, remove_card(held_list, card, IllegalMove))
+	  | (cur::rest, Draw::move_rest) => held(rest, move_rest, cur::held_list) 
+						
+  in
+      held(card_list, move_list, [])
+  end
+      
+fun score_challenge(card_list, goal) =
+  let
+      fun find_ace(card_list, acc) =
+	case card_list of
+	    [] => acc
+	  | (_, Ace)::rest => find_ace(rest, acc+1)
+	  | _::rest => find_ace(rest, acc)
+      fun find_best(sum, ace_num) =
+	if sum <= (goal + 2) orelse ace_num = 0 then sum else find_best(sum-10, ace_num - 1)
+      val sum = find_best(sum_cards(card_list), find_ace(card_list, 0));
+      val score = if sum > goal then 3 * (sum - goal) else goal - sum;
+  in
+      if all_same_color card_list then score div 2 else score  
+  end
+      
+fun officiate_challenge(card_list, move_list, goal) =
+  let
+      fun held(card_list, move_list, held_list) =
+	if sum_cards(held_list) >= goal then score_challenge(held_list, goal) else
+	case (card_list, move_list) of
+	    ([],_) => score_challenge(held_list, goal)
+	  | (_, []) => score_challenge(held_list, goal)
+	  | (_, Discard card::rest) => held(card_list, rest, remove_card(held_list, card, IllegalMove))
+	  | (cur::rest, Draw::move_rest) => held(rest, move_rest, cur::held_list) 
+						
+  in
+      held(card_list, move_list, [])
+  end
       

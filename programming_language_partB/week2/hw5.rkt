@@ -23,7 +23,14 @@
 ;; Problem 1
 
 ;; CHANGE (put your solutions here)
-
+(define (racketlist->mupllist list)
+  (if (null? list)
+      (aunit)
+      (apair (car list) (racketlist->mupllist (cdr list)))))
+(define (mupllist->racketlist list)
+  (if (aunit? (isaunit-e list))
+         null
+         (cons (apair-e1 list) (mupllist->racketlist (apair-e2 list)))))
 ;; Problem 2
 
 ;; lookup a variable in an environment
@@ -49,6 +56,8 @@
                        (int-num v2)))
                (error "MUPL addition applied to non-number")))]
         ;; CHANGE add more cases here
+        [(int? e) e]
+        []
         [#t (error (format "bad MUPL expression: ~v" e))]))
 
 ;; Do NOT change
