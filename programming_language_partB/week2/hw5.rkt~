@@ -97,13 +97,10 @@
           [(call? e)
            (letrec ([clo (eval-under-env (call-funexp e) env)]
                     [arg (eval-under-env (call-actual e) env)])
-             (if (closure? clo)
+             (if (begin (write env)(write "\n")(closure? clo))
                  (let ([fep (closure-fun clo)]
                        [env (closure-env clo)])
-                   (eval-under-env (fun-body fep) (add-arg-env (list arg) (add-to-env (cons (cons arg_tag (list (fun-formal fep))) (if (equal? (fun-nameopt fep) #f)
-                                                                                                                                       null
-                                                                                                                                       (cons (cons (fun-nameopt fep) clo) null)
-                                                                                                                                       )) env))))
+                   (eval-under-env (fun-body fep) (add-arg-env (list arg) (add-to-env (list (cons arg_tag (list (fun-formal fep))) (cons (fun-nameopt fep) clo)) env))))
                  (error "MUPL call applied to non-closure")
                  ))]
           [(mlet? e)
@@ -143,8 +140,7 @@
         [#t (mlet (car (car lstlst)) (cdr (car lstlst)) (mlet* (cdr lstlst) e2))]))
   
 (define (ifeq e1 e2 e3 e4)
-  (mlet "_x" e1 (mlet "_y" e2
-  (ifgreater (var "_x") (var "_y") e4 (ifgreater (var "_y") (var "_x") e4 e3)))))
+  (ifgreater e1 e2 e4 (ifgreater e2 e1 e4 e3)))
 
 ;; Problem 4
 
@@ -160,9 +156,8 @@
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map
-                 (fun #f "integer"
-                      (call (var "map") (fun #f "x" (add (var "integer") (var "x")))))))
-
+        "CHANGE (notice map is now in MUPL scope)"))
+(eval-exp (call (call mupl-map (fun #f "x" (add (var "x") (int 7)))) (apair (int 1) (aunit)))) 
 ;; Challenge Problem
 
 (struct fun-challenge (nameopt formal body freevars) #:transparent) ;; a recursive(?) 1-argument function
