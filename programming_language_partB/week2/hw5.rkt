@@ -47,11 +47,8 @@
 (define arg_tag "__args__")
 (define (eval-under-env e env)
   (letrec ([add-to-env (lambda(list e)
-                         (letrec ([copy (lambda(env)
-                                          (cond [(null? env) null]
-                                                [#t (cons (car env) (copy (cdr env)))] ))])
-                           (cond [(null? list) (copy e)]
-                                 [#t (cons (car list) (add-to-env (cdr list) e))])))]
+                           (cond [(null? list) e]
+                                 [#t (cons (car list) (add-to-env (cdr list) e))]))]
            [add-arg-env (lambda(arg-list e)
                           (letrec ([helper (lambda(real-arg-list formal-arg-list enviornment)
                                              (cond [(or
@@ -149,14 +146,13 @@
 ;; Problem 4
 
 (define mupl-map
-  (closure '()
            (fun #f "func"
                 (fun "map" "list"
                      (ifgreater
                       (isaunit (var "list"))
                       (int 0)
                       (aunit)
-                      (apair (call (var "func") (fst (var "list"))) (call (var "map") (snd (var "list")))))))))
+                      (apair (call (var "func") (fst (var "list"))) (call (var "map") (snd (var "list"))))))))
 
 (define mupl-mapAddN 
   (mlet "map" mupl-map
