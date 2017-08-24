@@ -185,7 +185,7 @@
                            [(mlet? e)
                             (letrec ([new-e (helper (mlet-e e))]
                                      [new-body (helper (mlet-body e))])
-                              (cons (mlet (mlet-var e)  (car new-e) (car new-body)) (set-union (cdr new-e) (cdr new-body))))]
+                              (cons (mlet (mlet-var e)  (car new-e) (car new-body)) (set-remove (set-union (cdr new-e) (cdr new-body)) (mlet-var e))))]
                            [(add? e)
                             (letrec ([new-e1 (helper (add-e1 e))]
                                      [new-e2 (helper (add-e2 e))])
